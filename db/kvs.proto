@@ -1,0 +1,54 @@
+
+syntax = "proto3";
+
+package db;
+
+// Simple RPC service that supports the following operations:
+// 1. List all keys and values
+// 2. Get a value by key - returns the current value, or nil if key not found
+// 3. Set a value by key - returns the old value, or nil if key not found
+// 4. Remove a value by key
+
+service KeyValueStore {
+  rpc List (ListRequest) returns (stream KeyValuePair) {}
+  rpc Get (GetRequest) returns (GetResponse) {}
+  rpc Set (KeyValuePair) returns (SetResponse) {}
+  rpc Remove (RemoveRequest) returns (RemoveResponse) {}
+}
+
+message KeyValuePair {
+  string key = 1;
+  string value = 2;
+}
+
+message ListRequest {}
+
+message GetRequest {
+  string key = 1;
+}
+
+message GetResponse {
+  oneof get_response_one_of {
+    string value = 1;
+    string error = 2;
+  }
+}
+
+message SetResponse {
+  oneof set_response_one_of {
+    string value = 1;
+    string error = 2;
+  }
+}
+
+message RemoveRequest {
+  string key = 1;
+}
+
+message RemoveResponse {
+  oneof remove_response_one_of {
+    string value = 1;
+    string error = 2;
+  }
+}
+
